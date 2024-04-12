@@ -8,23 +8,19 @@ session_counter = 0
 total_correct_urls = []
 os.makedirs("/ArchiveBate/ArchiveBate_10000", exist_ok=True)
 
-while session_counter != 100:
+while session_counter != 10:
   try:
-    start = (session_counter * 1000) + 1
-    end = start + 999
+    start = (session_counter * 10000) + 1
+    end = start + 9999
     urls = []
     correct_urls = []
     for num in range(start, end):
       urls.append(f'https://www.archivebate.com/watch/{num:08d}')
 
-    counter = 0
-
     async def fetch(session, url):
         async with session.get(url) as response:
-            global counter
             if response.status == 200:
                 correct_urls.append(url)
-                counter += 1
                 return await response.text()
 
 
@@ -40,7 +36,7 @@ while session_counter != 100:
     loop.run_until_complete(main())
     elapsed = time.perf_counter() - s
     print(f"executed in {elapsed:0.2f} seconds.")
-    print(counter)
+    print(len(correct_urls))
     correct_urls.sort()
     # print((correct_urls))
     with open(f"/ArchiveBate/ArchiveBate_10000/archiveBate_Urls_{session_counter}.txt", 'w') as file:
@@ -49,5 +45,6 @@ while session_counter != 100:
     session_counter += 1
     print(session_counter)
     total_correct_urls.extend(correct_urls)
+    print(len(total_correct_urls))
   except:
     pass
